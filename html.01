@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Canvas - AI 커리어 솔루션</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* 부드러운 페이드인 애니메이션 정의 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        /* 로딩 스피너 애니메이션 */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        /* 줄바꿈 유지를 위한 유틸리티 클래스 */
+        .whitespace-pre-line {
+            white-space: pre-line;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans pb-20 selection:bg-blue-100 selection:text-blue-900">
+
+    <!-- 1. 상단 헤더 영역 -->
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-slate-100 shadow-sm">
+        <div class="max-w-4xl mx-auto px-6 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-6 h-6 text-blue-500"></i>
+                <h1 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                    Career Canvas
+                </h1>
+            </div>
+            <p class="text-sm font-medium text-slate-400 hidden sm:block">취업 준비생을 위한 AI 커리어 솔루션</p>
+        </div>
+    </header>
+
+    <!-- 2. 메인 컨테이너 영역 -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 mt-10">
+        
+        <!-- 인트로 메시지 -->
+        <div class="text-center mb-10">
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mb-3">당신의 평범한 일상이 특별한 스펙이 됩니다</h2>
+            <p class="text-slate-500 text-sm sm:text-base">어떤 경험부터 정리해 볼까요? 편하게 작성해주시면 AI가 전문적으로 다듬어 드릴게요.</p>
+        </div>
+
+        <!-- 3. 탭 네비게이션 버튼 영역 -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+            <!-- 경험 조각 모음 탭 -->
+            <button onclick="switchTab('experience')" id="tab-experience" class="tab-btn flex flex-col items-center p-5 rounded-2xl transition-all duration-300 border-2 border-blue-500 shadow-md bg-blue-50 translate-y-[-2px]">
+                <div id="tab-icon-bg-experience" class="p-3 rounded-full mb-3 bg-white shadow-sm">
+                    <i data-lucide="book-open" id="tab-icon-experience" class="w-6 h-6 text-blue-500"></i>
+                </div>
+                <span id="tab-text-experience" class="font-semibold text-slate-800">경험 조각 모음</span>
+            </button>
+
+            <!-- 장단점 번역기 탭 -->
+            <button onclick="switchTab('weakness')" id="tab-weakness" class="tab-btn flex flex-col items-center p-5 rounded-2xl transition-all duration-300 border-2 border-transparent bg-white shadow-sm hover:bg-slate-50">
+                <div id="tab-icon-bg-weakness" class="p-3 rounded-full mb-3 bg-emerald-50">
+                    <i data-lucide="refresh-ccw" id="tab-icon-weakness" class="w-6 h-6 text-slate-400"></i>
+                </div>
+                <span id="tab-text-weakness" class="font-semibold text-slate-500">장단점 번역기</span>
+            </button>
+
+            <!-- 성장 로드맵 내비게이터 탭 -->
+            <button onclick="switchTab('roadmap')" id="tab-roadmap" class="tab-btn flex flex-col items-center p-5 rounded-2xl transition-all duration-300 border-2 border-transparent bg-white shadow-sm hover:bg-slate-50">
+                <div id="tab-icon-bg-roadmap" class="p-3 rounded-full mb-3 bg-indigo-50">
+                    <i data-lucide="map" id="tab-icon-roadmap" class="w-6 h-6 text-slate-400"></i>
+                </div>
+                <span id="tab-text-roadmap" class="font-semibold text-slate-500">성장 로드맵 내비게이터</span>
+            </button>
+        </div>
+
+        <!-- 4. 컨텐츠 영역 -->
+        <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-50 min-h-[400px] overflow-hidden">
+            
+            <!-- SECTION 1: 경험 조각 모음 -->
+            <div id="sec-experience" class="animate-fade-in block">
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <i data-lucide="book-open" class="w-5 h-5 text-blue-500"></i>
+                        경험 조각 모음
+                    </h3>
+                    <p class="text-slate-500">거창하지 않아도 좋아요. 일기 쓰듯 편하게 활동이나 경험을 적어주세요.</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">나의 경험</label>
+                        <textarea id="input-experience" class="w-full h-40 p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none text-slate-700" placeholder="예: 카페에서 6개월간 알바를 했는데, 진상 손님을 잘 응대해서 점장님께 칭찬을 받았고 재고 관리도 꼼꼼히 했습니다."></textarea>
+                        <p id="error-experience" class="text-red-500 text-sm mt-2 hidden"></p>
+                    </div>
+                    
+                    <button id="btn-experience" onclick="handleGenerate('experience')" class="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-2 disabled:bg-blue-300 disabled:cursor-not-allowed">
+                        <i data-lucide="sparkles" id="icon-experience" class="w-5 h-5"></i>
+                        <span id="btn-text-experience">직무 역량으로 변환하기</span>
+                    </button>
+
+                    <!-- 결과 컨테이너 -->
+                    <div id="result-container-experience">
+                        <div class="mt-8 p-6 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50 flex flex-col items-center justify-center text-slate-400 h-32">
+                            <p>내용을 입력하고 변환하기 버튼을 눌러주세요.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: 장단점 번역기 -->
+            <div id="sec-weakness" class="animate-fade-in hidden">
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <i data-lucide="refresh-ccw" class="w-5 h-5 text-emerald-500"></i>
+                        장단점 번역기
+                    </h3>
+                    <p class="text-slate-500">감추고 싶은 단점이나 성향을 직무에 맞는 매력적인 강점으로 재해석해 드립니다.</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">나의 솔직한 단점</label>
+                        <input type="text" id="input-weakness" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-slate-700" placeholder="예: 행동이 굼뜨고 결정을 내리는 데 시간이 오래 걸립니다.">
+                        <p id="error-weakness" class="text-red-500 text-sm mt-2 hidden"></p>
+                    </div>
+                    
+                    <button id="btn-weakness" onclick="handleGenerate('weakness')" class="w-full sm:w-auto px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold shadow-md shadow-emerald-500/20 transition-all flex items-center justify-center gap-2 disabled:bg-emerald-300 disabled:cursor-not-allowed">
+                        <i data-lucide="refresh-ccw" id="icon-weakness" class="w-5 h-5"></i>
+                        <span id="btn-text-weakness">강점으로 재해석하기</span>
+                    </button>
+
+                    <!-- 결과 컨테이너 -->
+                    <div id="result-container-weakness">
+                        <div class="mt-8 p-6 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50 flex flex-col items-center justify-center text-slate-400 h-32">
+                            <p>단점을 입력하고 재해석하기 버튼을 눌러주세요.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: 성장 로드맵 내비게이터 -->
+            <div id="sec-roadmap" class="animate-fade-in hidden">
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <i data-lucide="map" class="w-5 h-5 text-indigo-500"></i>
+                        성장 로드맵 내비게이터
+                    </h3>
+                    <p class="text-slate-500">목표하는 직무를 입력하시면 1, 3, 5년 차 성장 플랜과 입사 후 포부 초안을 그려드립니다.</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">목표 직무</label>
+                        <input type="text" id="input-roadmap" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-700" placeholder="예: 백엔드 개발자, 서비스 기획자, 콘텐츠 마케터 등">
+                        <p id="error-roadmap" class="text-red-500 text-sm mt-2 hidden"></p>
+                    </div>
+                    
+                    <button id="btn-roadmap" onclick="handleGenerate('roadmap')" class="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold shadow-md shadow-indigo-500/20 transition-all flex items-center justify-center gap-2 disabled:bg-indigo-300 disabled:cursor-not-allowed">
+                        <i data-lucide="map" id="icon-roadmap" class="w-5 h-5"></i>
+                        <span id="btn-text-roadmap">커리어 로드맵 생성하기</span>
+                    </button>
+
+                    <!-- 결과 컨테이너 -->
+                    <div id="result-container-roadmap">
+                        <div class="mt-8 p-6 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50 flex flex-col items-center justify-center text-slate-400 h-32">
+                            <p>목표 직무를 입력하고 로드맵 생성하기 버튼을 눌러주세요.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // -------------------------------------------------------------
+        // 1. 전역 설정 및 초기화
+        // -------------------------------------------------------------
+        
+        // 아이콘 초기 렌더링
+        lucide.createIcons();
+
+        // Gemini API 키 설정 (실행 환경에서 자동 주입)
+        const apiKey = ""; 
+
+        // -------------------------------------------------------------
+        // 2. 탭(Tab) 전환 로직
+        // -------------------------------------------------------------
+        const tabs = {
+            experience: { color: 'blue', border: 'border-blue-500', bg: 'bg-blue-50', textHover: 'text-blue-500' },
+            weakness: { color: 'emerald', border: 'border-emerald-500', bg: 'bg-emerald-50', textHover: 'text-emerald-500' },
+            roadmap: { color: 'indigo', border: 'border-indigo-500', bg: 'bg-indigo-50', textHover: 'text-indigo-500' }
+        };
+
+        function switchTab(activeId) {
+            Object.keys(tabs).forEach(id => {
+                // DOM 요소 가져오기
+                const sec = document.getElementById(`sec-${id}`);
+                const tabBtn = document.getElementById(`tab-${id}`);
+                const tabIconBg = document.getElementById(`tab-icon-bg-${id}`);
+                const tabIcon = document.getElementById(`tab-icon-${id}`);
+                const tabText = document.getElementById(`tab-text-${id}`);
+                const config = tabs[id];
+
+                if (id === activeId) {
+                    // 활성화된 탭 스타일 적용
+                    sec.classList.remove('hidden');
+                    sec.classList.add('block');
+                    
+                    tabBtn.className = `tab-btn flex flex-col items-center p-5 rounded-2xl transition-all duration-300 border-2 ${config.border} shadow-md ${config.bg} translate-y-[-2px]`;
+                    tabIconBg.className = `p-3 rounded-full mb-3 bg-white shadow-sm`;
+                    tabIcon.className = `w-6 h-6 text-${config.color}-500`;
+                    tabText.className = `font-semibold text-slate-800`;
+                } else {
+                    // 비활성화된 탭 스타일 적용
+                    sec.classList.add('hidden');
+                    sec.classList.remove('block');
+                    
+                    tabBtn.className = `tab-btn flex flex-col items-center p-5 rounded-2xl transition-all duration-300 border-2 border-transparent bg-white shadow-sm hover:bg-slate-50`;
+                    tabIconBg.className = `p-3 rounded-full mb-3 ${config.bg}`;
+                    tabIcon.className = `w-6 h-6 text-slate-400`;
+                    tabText.className = `font-semibold text-slate-500`;
+                }
+            });
+        }
+
+        // -------------------------------------------------------------
+        // 3. Gemini API 호출 함수 (Exponential Backoff 적용)
+        // -------------------------------------------------------------
+        async function callGeminiAPI(prompt, schema) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: schema
+                }
+            };
+
+            const maxRetries = 5;
+            const delays = [1000, 2000, 4000, 8000, 16000];
+
+            for (let attempt = 0; attempt < maxRetries; attempt++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    
+                    const result = await response.json();
+                    const textResponse = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (!textResponse) throw new Error("Invalid response format");
+                    
+                    return JSON.parse(textResponse);
+                } catch (error) {
+                    if (attempt === maxRetries - 1) throw error;
+                    // 실패 시 대기 (백오프)
+                    await new Promise(resolve => setTimeout(resolve, delays[attempt]));
+                }
+            }
+        }
+
+        // -------------------------------------------------------------
+        // 4. 기능별 실행 로직 제어 (버튼 클릭 시)
+        // -------------------------------------------------------------
+        async function handleGenerate(sectionId) {
+            const inputEl = document.getElementById(`input-${sectionId}`);
+            const errorEl = document.getElementById(`error-${sectionId}`);
+            const btnEl = document.getElementById(`btn-${sectionId}`);
+            const iconEl = document.getElementById(`icon-${sectionId}`);
+            const btnTextEl = document.getElementById(`btn-text-${sectionId}`);
+            const resultContainer = document.getElementById(`result-container-${sectionId}`);
+            
+            const inputValue = inputEl.value.trim();
+
+            // 유효성 검사
+            if (!inputValue) {
+                errorEl.textContent = '내용을 먼저 입력해주세요!';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            // 로딩 상태 시작
+            errorEl.classList.add('hidden');
+            btnEl.disabled = true;
+            const originalIcon = iconEl.getAttribute('data-lucide');
+            const originalText = btnTextEl.textContent;
+            
+            iconEl.setAttribute('data-lucide', 'loader-2');
+            iconEl.classList.add('animate-spin');
+            btnTextEl.textContent = 'AI가 분석 중입니다...';
+            lucide.createIcons(); // 아이콘 재렌더링
+
+            try {
+                let prompt, schema, renderHTML;
+
+                // 4-1. 각 탭별 프롬프트 및 스키마 세팅
+                if (sectionId === 'experience') {
+                    prompt = `사용자가 자신의 일상적이거나 날것의 경험을 입력했습니다. 이 경험을 분석하여 전문적인 직무 역량으로 변환해주세요.\n[사용자 경험]\n${inputValue}`;
+                    schema = {
+                        type: "OBJECT",
+                        properties: {
+                            keywords: { type: "ARRAY", items: { type: "STRING" }, description: "추출된 직무 역량 키워드 3개" },
+                            recommendedJobs: { type: "ARRAY", items: { type: "STRING" }, description: "추천 직무 TOP 3" },
+                            bulletPoint: { type: "STRING", description: "이력서에 바로 쓸 수 있는 전문적인 한 줄 경력기술서 불릿 포인트" }
+                        },
+                        required: ["keywords", "recommendedJobs", "bulletPoint"]
+                    };
+                } 
+                else if (sectionId === 'weakness') {
+                    prompt = `사용자가 자신의 단점이나 성향을 입력했습니다. 이를 직무 관점에서 긍정적이고 매력적인 강점으로 재해석하고, 자기소개서용 '성격의 장단점' 초안을 작성해주세요.\n[사용자 단점]\n${inputValue}`;
+                    schema = {
+                        type: "OBJECT",
+                        properties: {
+                            strengthKeyword: { type: "STRING", description: "단점을 긍정적으로 재해석한 핵심 강점 키워드" },
+                            coverLetterDraft: { type: "STRING", description: "이 단점을 강점으로 승화시켜 작성한 3~4문장 분량의 자기소개서 초안 텍스트" }
+                        },
+                        required: ["strengthKeyword", "coverLetterDraft"]
+                    };
+                }
+                else if (sectionId === 'roadmap') {
+                    prompt = `사용자가 목표로 하는 직무를 입력했습니다. 이 직무의 1년차, 3년차, 5년차 성장 로드맵(핵심 역량 및 주요 업무)을 구성하고, 이를 바탕으로 한 입사 후 포부 초안을 작성해주세요.\n[목표 직무]\n${inputValue}`;
+                    schema = {
+                        type: "OBJECT",
+                        properties: {
+                            year1: { type: "OBJECT", properties: { title: { type: "STRING" }, tasks: { type: "ARRAY", items: { type: "STRING" } } } },
+                            year3: { type: "OBJECT", properties: { title: { type: "STRING" }, tasks: { type: "ARRAY", items: { type: "STRING" } } } },
+                            year5: { type: "OBJECT", properties: { title: { type: "STRING" }, tasks: { type: "ARRAY", items: { type: "STRING" } } } },
+                            aspirationDraft: { type: "STRING", description: "위 로드맵을 바탕으로 한 자기소개서 '입사 후 포부' 텍스트 초안" }
+                        },
+                        required: ["year1", "year3", "year5", "aspirationDraft"]
+                    };
+                }
+
+                // API 호출
+                const data = await callGeminiAPI(prompt, schema);
+
+                // 4-2. 결과 데이터 기반 HTML 렌더링
+                if (sectionId === 'experience') {
+                    const keywordsHTML = data.keywords.map(kw => `<span class="px-3 py-1 bg-white border border-blue-200 text-blue-700 rounded-full text-sm font-medium shadow-sm">${kw}</span>`).join('');
+                    const jobsHTML = data.recommendedJobs.map(job => `<span class="px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-medium shadow-sm">${job}</span>`).join('');
+                    
+                    renderHTML = `
+                        <div class="mt-8 p-6 bg-blue-50/50 border border-blue-100 rounded-2xl space-y-6 animate-fade-in">
+                            <div>
+                                <h4 class="text-sm font-bold text-blue-800 mb-3 flex items-center gap-2">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4"></i> 추출된 핵심 역량
+                                </h4>
+                                <div class="flex flex-wrap gap-2">${keywordsHTML}</div>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-blue-800 mb-3 flex items-center gap-2">
+                                    <i data-lucide="map" class="w-4 h-4"></i> 추천 직무 TOP 3
+                                </h4>
+                                <div class="flex flex-wrap gap-2">${jobsHTML}</div>
+                            </div>
+                            <div class="pt-4 border-t border-blue-100">
+                                <h4 class="text-sm font-bold text-blue-800 mb-2">✨ 이력서 불릿 포인트</h4>
+                                <p class="text-slate-700 bg-white p-4 rounded-xl border border-blue-100 shadow-sm leading-relaxed">" ${data.bulletPoint} "</p>
+                            </div>
+                        </div>
+                    `;
+                } 
+                else if (sectionId === 'weakness') {
+                    renderHTML = `
+                        <div class="mt-8 p-6 bg-emerald-50/50 border border-emerald-100 rounded-2xl space-y-5 animate-fade-in">
+                            <div class="flex items-start gap-4">
+                                <div class="p-3 bg-white rounded-full shadow-sm border border-emerald-100 mt-1">
+                                    <i data-lucide="sparkles" class="w-6 h-6 text-emerald-500"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-emerald-800 mb-1">재해석된 나의 무기</h4>
+                                    <p class="text-xl font-bold text-slate-800">"${data.strengthKeyword}"</p>
+                                </div>
+                            </div>
+                            <div class="pt-4 border-t border-emerald-100">
+                                <h4 class="text-sm font-bold text-emerald-800 mb-2">📝 자기소개서 초안</h4>
+                                <p class="text-slate-700 bg-white p-4 rounded-xl border border-emerald-100 shadow-sm leading-relaxed whitespace-pre-line">${data.coverLetterDraft}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+                else if (sectionId === 'roadmap') {
+                    const renderYear = (yearKey, label, index) => {
+                        const yearData = data[yearKey];
+                        const tasksHTML = yearData.tasks.map(task => `<li>${task}</li>`).join('');
+                        return `
+                            <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                                <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-indigo-100 text-indigo-600 font-bold shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm z-10">
+                                    ${index * 2 + 1}
+                                </div>
+                                <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-indigo-100 bg-white shadow-sm">
+                                    <div class="font-bold text-indigo-800 mb-1">${label} : ${yearData.title}</div>
+                                    <ul class="text-sm text-slate-600 space-y-1 list-disc list-inside">
+                                        ${tasksHTML}
+                                    </ul>
+                                </div>
+                            </div>
+                        `;
+                    };
+
+                    renderHTML = `
+                        <div class="mt-8 bg-indigo-50/50 border border-indigo-100 rounded-2xl p-6 animate-fade-in">
+                            <h4 class="text-lg font-bold text-indigo-900 mb-6">🚀 ${inputValue} 커리어 패스</h4>
+                            <div class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-indigo-200 before:to-transparent">
+                                ${renderYear('year1', '1년 차', 0)}
+                                ${renderYear('year3', '3년 차', 1)}
+                                ${renderYear('year5', '5년 차', 2)}
+                            </div>
+                            <div class="pt-6 mt-8 border-t border-indigo-200">
+                                <h4 class="text-sm font-bold text-indigo-800 mb-2">🎯 입사 후 포부 초안</h4>
+                                <p class="text-slate-700 bg-white p-4 rounded-xl border border-indigo-100 shadow-sm leading-relaxed whitespace-pre-line">${data.aspirationDraft}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // 결과 컨테이너에 HTML 주입 및 아이콘 재렌더링
+                resultContainer.innerHTML = renderHTML;
+                lucide.createIcons();
+
+            } catch (err) {
+                console.error(err);
+                errorEl.textContent = '처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+                errorEl.classList.remove('hidden');
+            } finally {
+                // 로딩 상태 종료 및 버튼 복구
+                btnEl.disabled = false;
+                iconEl.setAttribute('data-lucide', originalIcon);
+                iconEl.classList.remove('animate-spin');
+                btnTextEl.textContent = originalText;
+                lucide.createIcons();
+            }
+        }
+    </script>
+</body>
+</html>
